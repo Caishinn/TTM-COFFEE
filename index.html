@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Time to Meow Coffee</title>
+    <link rel="stylesheet" href="./style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  
+  <body>
+    <header>
+      <h1>Time to Meow Coffee</h1>
+      <p>Your favorite local coffee spot</p>
+        <!-- Order History Button in header -->
+        <button id="order-history-btn" >Order History</button>
+  
+
+
+<!-- Modal Overlay -->
+<div id="modal-overlay"></div>
+
+
+
+
+
+<!-- Order History Modal -->
+<div id="order-history-modal" role="dialog" aria-modal="true" aria-labelledby="order-history-title">
+  <button id="close-history-btn" aria-label="Close order history">&times;</button>
+  <h2 id="order-history-title">Order History</h2>
+  <div id="order-history-header" style="text-align: center; margin-bottom: 12px; font-weight: bold; font-size: 16px;"></div>
+<div id="order-history-list"></div>
+
+   <div id="order-history-list" class="order-history-list"></div>
+
+      <!-- Clear Button -->
+      <button id="clear-history-btn" onclick="clearOrderHistory()">Clear Order History</button>
+      
+
+  
+ 
+
+</div>
+    </header>
+
+    <!--section class="hero">
+      <h2>Welcome to Meow Coffee</h2>
+      <p>Enjoy freshly brewed coffee and warm vibes.</p>
+    </section-->
+
+    <section class="menu-section">
+      <h2 class="section-title">Menu</h2>
+      <div class="menu-items" id="menu-items">
+        <div class="item" id="item-espresso">
+          <img src="./Image/image.png" alt="Espresso" />
+          <h3>Espresso</h3>
+          <p>$2.50</p>
+          <input id="qty-espresso" type="number" min="1" value="1" />
+          <button
+            onclick="addToCart('Espresso', 2.5, 'qty-espresso', 'item-espresso')"
+          >
+            Add to Cart
+          </button>
+        </div>
+
+        <div class="item" id="item-milk">
+          <img src="./Image/image.png" alt="Milk" />
+          <h3>Milk</h3>
+          <p>$2.50</p>
+          <input id="qty-milk" type="number" min="1" value="1" />
+          <button onclick="addToCart('Milk', 2.5, 'qty-milk', 'item-milk')">
+            Add to Cart
+          </button>
+        </div>
+
+        <div class="item" id="item-cappuccino">
+          <img
+            src="https://images.unsplash.com/photo-1509042239860-f550ce710b93"
+            alt="Cappuccino"
+          />
+          <h3>Cappuccino</h3>
+          <p>$3.50</p>
+          <input id="qty-cappuccino" type="number" min="1" value="1" />
+          <button
+            onclick="addToCart('Cappuccino', 3.5, 'qty-cappuccino', 'item-cappuccino')"
+          >
+            Add to Cart
+          </button>
+        </div>
+
+        <div class="item" id="item-latte">
+          <img
+            src="https://images.unsplash.com/photo-1511920170033-f8396924c348"
+            alt="Latte"
+          />
+          <h3>Latte</h3>
+          <p>$4.00</p>
+          <input id="qty-latte" type="number" min="1" value="1" />
+          <button onclick="addToCart('Latte', 4.0, 'qty-latte', 'item-latte')">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="cart-section">
+      <h2 class="section-title">Cart</h2>
+      <div class="cart-items" id="cart-items">
+        <p>Your cart is empty. Please have your order.</p>
+      </div>
+      <div class="centered">
+        <button onclick="checkout()">Checkout</button>
+      </div>
+    </section>
+
+    <section
+      class="checkout-section"
+      id="checkout-section"
+      style="display: none"
+    >
+      
+      <h2>Order Confirmation</h2>
+      <div id="order-summary"></div>
+      <div id="qrcode" style="margin: 20px auto; width: fit-content"></div>
+      <div id="checkout-section" style="display: none;">
+        <h2>Order Confirmation</h2>
+        <div id="order-summary"></div>
+        <div id="qrcode"></div>
+      </div>
+      <div class="confirmation-header">
+        <div class="checkmark">&#10004;</div>
+        <h2>Thank you for your order!</h2>
+        <p>Your order has been placed successfully.</p>
+      </div>
+      
+      <button onclick="goBackToMenu()">Back to Menu</button>
+      <!--button onclick="downloadReceipt()">Download Receipt</button-->
+      <!--button onclick="downloadPDFReceipt()">Download PDF Receipt</button-->
+      <button onclick="confirmPayment()">Confirm Payment</button>
+
+    </section>
+    <!-- History Section -->
+    <section id="history-section" class="history-section" style="display:none;">
+      <h2>Order History</h2>
+      <div id="history-list"></div>
+      <button onclick="hideHistory()" class="btn-secondary">Back to Menu</button>
+    </section>
+
+    <footer>
+      <p>© 2025 Time to Meow Coffee</p>
+    </footer>
+
+    <script src="./main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- jsPDF for generating PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- QRious for generating QR code as image -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // Initialize EmailJS with your Public Key
+    (function() {
+      emailjs.init("YEgB_VoTVNm_6JXu6"); // Replace with your actual Public Key
+    })();
+  </script>
+    <script>
+        // ✅ GLOBAL CART
+        const cart = [];
+      
+        // ✅ ADD TO CART FUNCTION
+        function addToCart(name, price, qtyInputId, itemId) {
+          const qty = parseInt(document.getElementById(qtyInputId).value);
+          const image = document.querySelector(`#${itemId} img`).src;
+      
+          const existingItem = cart.find(item => item.name === name);
+          if (existingItem) {
+            existingItem.qty += qty;
+          } else {
+            cart.push({ name, qty, price, image_url: image });
+          }
+      
+          updateCartDisplay();
+        }
+      
+        // ✅ UPDATE CART DISPLAY (optional)
+        function updateCartDisplay() {
+          const cartItemsContainer = document.getElementById("cart-items");
+          cartItemsContainer.innerHTML = "";
+      
+          if (cart.length === 0) {
+            cartItemsContainer.innerHTML = "<p>Your cart is empty. Please have your order.</p>";
+            return;
+          }
+      
+          const table = document.createElement("table");
+          cart.forEach(item => {
+            const row = document.createElement("tr");
+      
+            const nameCell = document.createElement("td");
+            nameCell.textContent = item.name;
+      
+            const qtyCell = document.createElement("td");
+            qtyCell.textContent = `Qty: ${item.qty}`;
+      
+            const priceCell = document.createElement("td");
+            priceCell.textContent = `$${(item.price * item.qty).toFixed(2)}`;
+      
+            row.appendChild(nameCell);
+            row.appendChild(qtyCell);
+            row.appendChild(priceCell);
+            table.appendChild(row);
+          });
+      
+          cartItemsContainer.appendChild(table);
+        }
+      </script>
+      
+  </body>
+</html>
